@@ -1,0 +1,96 @@
+﻿@model IEnumerable<ApplicationModel.Admission>
+@{
+    ViewBag.Title = "AdminDashboard";
+    WebGrid webGrid = new WebGrid(source: Model);
+}
+<style type="text/css">
+    body {
+        font-family: Arial;
+        font-size: 10pt;
+    }
+
+    .Grid {
+        border: 1px solid #ccc;
+        border-collapse: collapse;
+    }
+
+        .Grid th {
+            background-color: #F7F7F7;
+            font-weight: bold;
+        }
+
+        .Grid th, .Grid td {
+            padding: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .Grid, .Grid table td {
+            border: 0px solid #ccc;
+        }
+
+            .Grid th a, .Grid th a:visited {
+                color: #333;
+            }
+</style>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    function GetStudent() {
+        var studentId = document.getElementById("StudentId").value;
+        $.ajax({
+            type: "POST",
+            url: "/Home/GetStudentData",
+            data: '{StudentId: ' + studentId + '}',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: OnSuccess,
+            failure: function (response) {
+                alert(response.d);
+            },
+            error: function (response) {
+                window.location.href = '/Home/AdminDashboard';
+            }
+        });
+    };
+
+    function OnSuccess(response) {
+        var model = response;
+        var row = $("#WebGrid tbody tr:last-child").clone(true);
+        $("#WebGrid tbody tr").remove();
+
+        //var row = $("#WebGrid tbody tr:last-child").clone(true);
+        //$("#WebGrid tbody tr").remove();
+        if (model[0] === null) {
+            alert('No Records Found');
+            window.location.href = '/Home/AdminDashboard';
+        }
+        else {
+            $.each(model, function () {
+                var student = this;
+                //$("td", row).eq(0).html($(this).find("AdmissionId").text());
+                $("td", row).eq(0).html(student.AdmissionId);
+                //$("td", row).eq(1).html($(this).find("FirstName").text());
+                $("td", row).eq(1).html(student.FirstName);
+                //$("td", row).eq(1).html($(this).find("Grade").text());
+                $("td", row).eq(2).html(student.Grade);
+                //$("td", row).eq(1).html($(this).find("FatherName").text());
+                $("td", row).eq(3).html(student.FatherName);
+                $("td", row).eq(4).html(student.CourseName);
+                //$("td", row).eq(1).html($(this).find("CourseName").text());
+                $("td", row).eq(5).html(student.SubCourseName);
+                //$("td", row).eq(1).html($(this).find("SubCourseName").text());
+                $("#WebGrid").append(row);
+                row = $("#WebGrid tbody tr:last-child").clone(true);
+            });
+        }
+    };
+</script>
+@using (Html.BeginForm("AdminDashboard", "Home", FormMethod.Get))
+{
+
+    <h4 align="center" style="margin-bottom: 10px;">Admissions </h4>
+    <div align="center" style="margin-top: 100px;">
+        <span><label>Search Student</label></span><input type="text" placeholder="Student Id" id="StudentId" onkeyup="GetStudent()" style="margin-left: 10px; margin-bottom: 10px;" />
+        @webGrid.GetHtml(htmlAttributes: new { @id = "WebGrid", @class = "Grid" }, columns: webGrid.Columns(webGrid.Column("AdmissionId", "Student Id"), webGrid.Column("FirstName", "Name"), webGrid.Column("Grade", "Grade"), webGrid.Column("FatherName", "Father Name"), webGrid.Column("CourseName", "Course Name"), webGrid.Column("SubCourseName", "Sub Course Name")))
+    </div>
+}
+

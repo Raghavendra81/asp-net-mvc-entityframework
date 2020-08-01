@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "School Application";
+}
+<head>
+    <link href="~/Content/SchoolStyleSheet.css" rel="stylesheet" />
+</head>
+<script type="text/javascript">
+</script>
+<body id="backDrop">
+</body>
+<div id="form" style="margin-top: 50px;">
+    <div>
+        <h2>School Application</h2>
+        <h3 style="margin-left: 20px; margin-bottom: 20px;">Admissions Open</h3>
+        <h4 style="margin-left: 10px;margin-bottom: 20px;">Academic year 2020-2021</h4>
+        <input type="button" value="Admission Enquiry" class="btn btn-success btn-sm" style="margin-left: 50px;" onclick="location.href='@Url.Action("Admission","Home")'"/>
+    </div>
+</div>

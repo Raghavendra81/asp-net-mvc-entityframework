@@ -1,0 +1,102 @@
+﻿@model ApplicationModel.Admission
+@{
+
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Admission</title>
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+    <script type="text/javascript">
+
+        function FillSubCourse() {
+            var courseId = $('#CourseId').val();
+            $.ajax({
+                url: '/Home/GetSubCourses',
+                type: "GET",
+                dataType: "JSON",
+                data: { Course: courseId },
+                success: function (subCourses) {
+                    $("#StudentCourseId").html(""); // clear before appending new list
+                    $.each(subCourses, function (i, course) {
+                        $("#StudentCourseId").append(
+                            $('<option></option>').val(course.Value).html(course.Text));
+                    });
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    @using (Html.BeginForm("Admission", "Home", FormMethod.Post))
+    {
+        <div style="margin-left: 330px;">
+            <div>
+                <h4>Personal Details</h4>
+            </div>
+            <div class="row">
+                <div class="col-xs-3 col-sm-3 col-md-3">
+                    <div class="form-group">
+                        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", placeholder = "First Name", style = "width: 200px;" })
+                        @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6">
+                    <div class="form-group">
+                        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = "Last Name", style = "width: 200px;" })
+                        @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.TextBoxFor(m => m.DateOfBirth, new { @class = "form-control", placeholder = "Date Of Birth", Value = "" })<span><a>Format dd-mm-yy</a></span>
+                @Html.ValidationMessageFor(m => m.DateOfBirth, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.RadioButtonFor(m => m.Gender, "Male")<span style="margin-left: 5px;">Male</span>
+                @Html.RadioButtonFor(m => m.Gender, "Female")<span style="margin-left: 5px;">Female</span>
+                @Html.ValidationMessageFor(m => m.Gender, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.TextBoxFor(m => m.FatherName, new { @class = "form-control", placeholder = "Father Name", style = "width: 200px;" })
+                @Html.ValidationMessageFor(m => m.FatherName, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.TextBoxFor(m => m.ContactNumber, new { maxlength = 10, @class = "form-control", placeholder = "Contact Number", style = "width: 200px;" })
+                @Html.ValidationMessageFor(m => m.ContactNumber, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.TextBoxFor(m => m.Address, new { @class = "form-control", placeholder = "Address", style = "width: 200px;" })
+                @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+            </div>
+
+            <div>
+                <h4>Course Details</h4>
+            </div>
+
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Course)
+                @Html.DropDownListFor(m => m.CourseId, Model.Course, "Select a Course", new { @class = "form-control", onchange = "FillSubCourse()" })
+                @Html.ValidationMessageFor(m => m.Course, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.StudentCourse)
+                @Html.DropDownListFor(m => m.StudentCourseId, new SelectList(Enumerable.Empty<SelectListItem>()), "Select a Sub Course", new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Standard)
+                @Html.DropDownListFor(m => m.StandardId, Model.Standard, "Select your grade", new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Course, "", new { @class = "text-danger" })
+            </div>
+            <div>
+                <input type="submit" value="Submit" name="Submit" />
+            </div>
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        </div>
+    }
+</body>
+</html>

@@ -1,0 +1,34 @@
+﻿@model ApplicationModel.Admin
+@{
+    ViewBag.Title = "AdminLogin";
+}
+<head>
+    <link href="~/Content/SchoolStyleSheet.css" rel="stylesheet" />
+</head>
+
+@using (Html.BeginForm("AdminLogin", "Home", FormMethod.Post))
+{
+    <div id="form" style="margin-top: 60px;">
+        <div>
+            <h4>Admin Log in</h4>
+        </div>
+        <div style="margin-bottom: 5px;">
+            @Html.TextBoxFor(model => model.Admin_Id, new {@class = "form-control", placeholder = "Admin Id"})
+            @*<input type="text" class="form-control" name="Admin_Id" placeholder="Admin Id"/>*@
+            @Html.ValidationMessageFor(model => model.Admin_Id, "", new {@class = "text-danger"})
+        </div>
+        <div style="margin-bottom: 8px;">
+            @Html.PasswordFor(model => model.Password, new {@class = "form-control", placeholder = "Password"})
+            @*<input type="password" class="form-control" name="password" placeholder="Password"/>*@
+            @Html.ValidationMessageFor(model => model.Password, "", new {@class = "text-danger"})
+        </div>
+        <div>
+            <input type="submit" name="Log In" value="Sign in" style="margin-bottom: 5px;" class="btn btn-success btn-sm"/>
+
+
+        </div>
+        <div>
+            @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+        </div>
+    </div>
+}
